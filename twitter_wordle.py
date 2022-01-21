@@ -3,7 +3,7 @@
 import os
 from pytwitter import StreamApi
 import re
-import words
+import wordle_candidate
 
 regex = re.compile(".*Wordle (?P<day>\d+) \d/6\n\n(?P<grid>([🟩🟧🟨🟦⬛⬜]{5}\n)+).*")
 
@@ -21,56 +21,21 @@ def normalize_char(c):
     return c
 
 def normalize(line):
-    return list(map(normalize_char, line))
-
-def valid_candidate(candidate, line):
-    # Characters that are not right and in the correct spot
-    wrong_chars_in_candidate = [c for c, rule in zip(candidate, line) if rule != '🟩']
-
-    # At least one of all the valid words needs to match, otherwise the
-    # candidate cannot be the solution
-    for other in words.candidates:
-        match = True
-
-        for c, o, rule in zip(candidate, other, line):
-            # Correct letter in the correct spot
-            if rule == '🟩':
-                if c != o:
-                    match = False
-                    break
-            # Correct letter in the wrong spot
-            elif rule == '🟨':
-                if c == o or o not in wrong_chars_in_candidate:
-                    match = False
-                    break
-            # Incorrect letter
-            else:
-                if o in wrong_chars_in_candidate:
-                    match = False
-                    break
-
-        # There was a match, no need to continue
-        if match:
-            return True
-
-    return False
+    return "".join(map(normalize_char, line))
 
 class DaySolver():
     def __init__(self):
-        # Maybe more fair? But takes even longer
-        # self.candidates = words.candidates
-
-        self.candidates = words.solutions
+        self.candidates = wordle_candidate.initial_candidates
 
     def refine(self, line):
-        self.candidates = list(filter(lambda c: valid_candidate(c, line), self.candidates))
+        self.candidates = [ c for c in self.candidates if c.valid(line) ]
 
     def print_summary(self):
         l = len(self.candidates)
         print(f"{l} candidates left")
         if l < 10:
             for candidate in self.candidates:
-                print(candidate)
+                print(candidate.word)
 
 class WordleSolver(StreamApi):
     def __init__(self, bearer_token):
