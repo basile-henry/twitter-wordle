@@ -17,6 +17,8 @@ Day 213: 15 candidates left
 Using 892 tweets, and 80 unique lines
 ```
 
+[Here](https://gist.github.com/0bc62a95def5aa205705af66a0fd5bf8) is an example run of `twitter-wordle` on day 215 (20 Jan 2022) which took around 40 seconds to gather enough tweets (74) and unique lines (61) to narrow in on only 1 candidate.
+
 ## Spoilers
 
 It should be obvious but don't run this if you don't want spoilers. Actually, don't even look at `words.py` as it contains an explicit list of past and future solutions.
