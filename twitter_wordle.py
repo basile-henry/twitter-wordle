@@ -5,7 +5,7 @@ from pytwitter import StreamApi
 import re
 import wordle_candidate
 
-regex = re.compile(".*Wordle (?P<day>\d+) \d/6\n\n(?P<grid>([🟩🟧🟨🟦⬛⬜]{5}\n)+).*")
+regex = re.compile(".*Wordle (?P<day>\d+) \d/6\*?\n\n(?P<grid>([🟩🟧🟨🟦⬛⬜]{5}\n)+).*")
 
 # normalize colour scheme
 def normalize_char(c):
